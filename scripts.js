@@ -8,7 +8,9 @@ const addHoursToDate = (objDate, intHours) => {
 
 const parseHoursMinutes = (timeAsString) => {
     const timeSplit = timeAsString.split(".")
-    return [parseInt(timeSplit[0]), parseInt(timeSplit[1])]
+    const hours = parseInt(timeSplit[0])
+    const minutes = parseInt(timeSplit[1])
+    return [hours ? hours : 0, minutes ? minutes : 0]
 
 }
 
@@ -49,13 +51,22 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("End time:", endTimeHours, endTimeMinutes)
         console.log("Work hours",workHours, workMinutes)
 
+        calculateEndTime([startTimeHours, startTimeMinutes], breakDuration, [workHours, workMinutes])
+
 
     }
 
-    const calculateEndTime = (startTime, breakDuration, workHours) => {
+    const calculateEndTime = (startTime, breakDuration, workTime) => {
         const date = new Date()
         console.log(date)
-        date.setHours(startTime)
+        date.setHours(startTime[0])
+        date.setMinutes(startTime[1])
+        date.setSeconds(0)
+        console.log(date)
+        const interimDate = addHoursToDate(date, breakDuration / 60)
+        console.log(interimDate)
+        const finalDate = addHoursToDate(interimDate, workTime[0] + (workTime[1] / 60))
+        console.log(finalDate)
 
     }
 })
