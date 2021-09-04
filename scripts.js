@@ -44,32 +44,51 @@ class TimeValue {
         const newMinutes = totalMinutes % 60
         return new TimeValue(newHours, newMinutes)
     }
+
+    set(hours, minutes){
+        if (this.hours != hours || this.minutes != minutes){
+            this.hours = (hours == null)
+                ? null
+                : hours + (parseInt(minutes / 60))
+            this.minutes = (minutes == null)
+                ? null 
+                : minutes % 60
+            this.lastModifiedTimestamp = Date.now()    
+        }
+    }
+
+    setFromString(string){
+        if (string.length == 0){
+            this.set(null, null)
+            return
+        }
+        const timeSplit = string.split(".")
+        const hours = parseInt(timeSplit[0])
+        const minutes = parseInt(timeSplit[1])
+        this.set(hours ? hours : 0, minutes ? minutes : 0)
+    }
 }
 
 const decideWhichFieldToCalculate = (startTime, breakDuration, endTime, workHours) => {
     const numberOfNans = 1
 }
 
+const startTime = new TimeValue(null, null)
+const breakDuration = new TimeValue(null, null)
+const endTime = new TimeValue(null, null)
+const workHours = new TimeValue(null, null)
+
 const calculateMissingTime = () => {
     console.log("calculateMissingTime triggered")
-    const startTimeFormValue = document.getElementById("start-time").value
-    const startTime = startTimeFormValue 
-                        ? new TimeValue(...parseHoursMinutes(startTimeFormValue))
-                        : null
-
-    const breakDuration = new TimeValue(0, parseInt(document.getElementById("break-duration").value))
-
-    const endTimeFormValue = document.getElementById("end-time").value
-    const [endTimeHours, endTimeMinutes] = parseHoursMinutes(endTimeFormValue)
-    const endTime = new TimeValue(endTimeHours, endTimeMinutes)
-
-    const [workHours, workMinutes] = parseHoursMinutes(document.getElementById("work-hours").value)
-    const workTime = new TimeValue(workHours, workMinutes)
+    startTime.setFromString(document.getElementById("start-time").value)
+    breakDuration.setFromString("0." + document.getElementById("break-duration").value)
+    endTime.setFromString(document.getElementById("end-time").value)
+    workHours.setFromString(document.getElementById("work-hours").value)
 
     console.log("Start time:", startTime, startTime?.asHours(), startTime?.asMinutes())
     console.log("Break:", breakDuration)
     console.log("End time:", endTime)
-    console.log("Work hours", workTime)
+    console.log("Work hours", workHours)
     
     console.log("Start + break:", startTime.add(breakDuration))
 
