@@ -1,0 +1,19 @@
+body {
+    display:flex;
+    flex-flow:column wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+#work-time-calculator-form {
+    display:flex;
+    flex-flow:column wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+input {
+    text-align: center;
+    width: 3em;
+    margin-bottom: 1em;
+}
