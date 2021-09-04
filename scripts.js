@@ -57,8 +57,12 @@ class TimeValue {
         }
     }
 
+    setFromTimeValue(otherTimeValue){
+        this.set(otherTimeValue.hours, otherTimeValue.minutes)
+    }
+
     setFromString(string){
-        if (string.length == 0){
+        if (string.length === 0){
             this.set(null, null)
             return
         }
@@ -66,6 +70,14 @@ class TimeValue {
         const hours = parseInt(timeSplit[0])
         const minutes = parseInt(timeSplit[1])
         this.set(hours ? hours : 0, minutes ? minutes : 0)
+    }
+
+    isValid(){
+        return (this.hours !== null && this.minutes !== null)
+    }
+
+    asString(){
+        return this.hours + "." + this.minutes
     }
 }
 
@@ -91,6 +103,16 @@ const calculateMissingTime = () => {
     console.log("Work hours", workHours)
     
     console.log("Start + break:", startTime.add(breakDuration))
+
+    const allHaveValues = [startTime, breakDuration, endTime, workHours].every(val => val.isValid())
+    console.log("allHaveValues:", allHaveValues)
+
+    // TODO: If any other field is empty calculate that
+    if (!workHours.isValid() || allHaveValues){
+        workHours.setFromTimeValue(endTime.subtract(startTime).subtract(breakDuration))
+        console.log(workHours)
+        document.getElementById("work-hours").value = workHours.asString()
+    }
 
     //calculateEndTime([startTimeHours, startTimeMinutes], breakDuration, [workHours, workMinutes])
 
